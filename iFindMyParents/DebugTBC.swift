@@ -8,9 +8,9 @@
 
 import UIKit
 
-class DebugTBC: UITableViewController {
+class DebugTBC: UITableViewController, LocationManagerDelegate {
     
-    let FMP位置提交接口:String = "http://s.aday01.com:18080/uploader";
+    let FMP位置提交接口:String = "http://s.aday01.com:18080/uploader"
     
     /*
     向 http://s.aday01.com:18080/uploader?user=用户 提交POST请求，请求数据体为JSON格式
@@ -23,53 +23,77 @@ class DebugTBC: UITableViewController {
     
     var 日志数据:NSMutableArray = NSMutableArray()
     var 日志时间:NSMutableArray = NSMutableArray()
-    let 字体设置:UIFont = UIFont.systemFontOfSize(9)
+    let 字体设置:UIFont = UIFont.systemFont(ofSize: 9)
+    //var 计时器:MSWeakTimer
+    let 位置引擎:LocationManager = LocationManager()
     
     func 新增日志条目(内容:String) {
-        let 当前日期:NSDate = NSDate()
-        let 日期格式化器:NSDateFormatter = NSDateFormatter()
+        let 当前日期:Date = Date()
+        let 日期格式化器:DateFormatter = DateFormatter()
         日期格式化器.dateFormat = "yyyy-MM-dd 'at' HH:mm:ss.SSS"
-        let 当前日期字符串:String = 日期格式化器.stringFromDate(当前日期) as String
-        日志数据.insertObject(内容, atIndex: 0)
-        日志时间.insertObject(当前日期字符串, atIndex: 0)
-        tableView.reloadData();
+        let 当前日期字符串:String = 日期格式化器.string(from: 当前日期)
+       print("\(当前日期字符串) \(内容)")
+        日志数据.add(内容)
+        日志时间.add(当前日期字符串)
+        tableView.reloadData()
+    }
+    
+    func 定时扫描() {
+        
     }
     
     override func viewDidLoad() {
         创建UI()
-        新增日志条目("Application loading complete.")
+        新增日志条目(内容: "Application loading complete.")
+        启动任务()
+    }
+    
+    func 启动任务() {
+        //计时器 = MSWeakTimer.scheduledTimerWithTimeInterval(10.0, target: self, selector: #selector(self.定时扫描), userInfo: nil, repeats: false, dispatchQueue: dispatch_get_main_queue())
+        位置引擎.代理 = self
+        位置引擎.精度 = 1
+        位置引擎.初始化位置引擎()
+    }
+    
+    func 位置引擎提示(信息:String) {
+        新增日志条目(内容: 信息)
+    }
+    
+    func 位置引擎信息(经度:Double, 纬度:Double) {
+        let 信息:String = "longitude=\(经度), latitude=\(纬度)"
+        新增日志条目(内容: 信息)
     }
     
     func 创建UI() {
-        let 表格头部视图:UIView = UIView(frame: CGRectMake(0, 0, self.view.frame.size.width, 20))
-        表格头部视图.backgroundColor = UIColor.lightGrayColor()
+        let 表格头部视图:UIView = UIView(frame: CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: self.view.frame.size.width, height: 20)))
+        表格头部视图.backgroundColor = UIColor.lightGray()
         self.tableView.tableHeaderView = 表格头部视图
-        self.tableView.backgroundColor = UIColor.blackColor()
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.None;
+        self.tableView.backgroundColor = UIColor.black()
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 日志数据.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let 单元格:UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier:"cell");
-        单元格.selectionStyle = .None
-        单元格.backgroundColor = UIColor.blackColor();
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let 单元格:UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier:"cell");
+        单元格.selectionStyle = .none
+        单元格.backgroundColor = UIColor.black()
         单元格.textLabel!.font = 字体设置
         单元格.detailTextLabel!.font = 字体设置
-        单元格.textLabel!.textColor = UIColor.lightGrayColor();
-        单元格.detailTextLabel!.textColor = UIColor.lightGrayColor();
+        单元格.textLabel!.textColor = UIColor.lightGray()
+        单元格.detailTextLabel!.textColor = UIColor.lightGray()
         单元格.textLabel!.text = 日志时间[indexPath.row] as? String
         单元格.detailTextLabel!.text = 日志数据[indexPath.row] as? String
-        return 单元格;
+        return 单元格
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 25
     }
 }

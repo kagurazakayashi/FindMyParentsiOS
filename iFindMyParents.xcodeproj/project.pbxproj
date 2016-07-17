@@ -14,6 +14,8 @@
 		537313951D3B5F4A000D9351 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 537313931D3B5F4A000D9351 /* LaunchScreen.storyboard */; };
 		5373139D1D3B6736000D9351 /* DebugTBC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373139C1D3B6736000D9351 /* DebugTBC.swift */; };
 		537313A01D3B68EC000D9351 /* DebugTBCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5373139F1D3B68EC000D9351 /* DebugTBCell.swift */; };
+		537313A61D3B721B000D9351 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 537313A51D3B721B000D9351 /* MSWeakTimer.m */; };
+		537313AD1D3B768B000D9351 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537313AC1D3B768B000D9351 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,10 @@
 		537313961D3B5F4A000D9351 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5373139C1D3B6736000D9351 /* DebugTBC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugTBC.swift; sourceTree = "<group>"; };
 		5373139F1D3B68EC000D9351 /* DebugTBCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugTBCell.swift; sourceTree = "<group>"; };
+		537313A31D3B721A000D9351 /* iFindMyParents-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iFindMyParents-Bridging-Header.h"; sourceTree = "<group>"; };
+		537313A41D3B721B000D9351 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
+		537313A51D3B721B000D9351 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
+		537313AC1D3B768B000D9351 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,24 +64,52 @@
 		537313891D3B5F4A000D9351 /* iFindMyParents */ = {
 			isa = PBXGroup;
 			children = (
+				537313A71D3B7223000D9351 /* 第三方类库 */,
 				5373138A1D3B5F4A000D9351 /* AppDelegate.swift */,
-				5373139E1D3B6749000D9351 /* UI */,
+				5373139E1D3B6749000D9351 /* 应用界面 */,
+				537313AB1D3B7639000D9351 /* 位置引擎 */,
 				5373138E1D3B5F4A000D9351 /* Main.storyboard */,
 				537313911D3B5F4A000D9351 /* Assets.xcassets */,
 				537313931D3B5F4A000D9351 /* LaunchScreen.storyboard */,
 				537313961D3B5F4A000D9351 /* Info.plist */,
+				537313A31D3B721A000D9351 /* iFindMyParents-Bridging-Header.h */,
 			);
 			path = iFindMyParents;
 			sourceTree = "<group>";
 		};
-		5373139E1D3B6749000D9351 /* UI */ = {
+		5373139E1D3B6749000D9351 /* 应用界面 */ = {
 			isa = PBXGroup;
 			children = (
 				5373138C1D3B5F4A000D9351 /* ViewController.swift */,
 				5373139C1D3B6736000D9351 /* DebugTBC.swift */,
 				5373139F1D3B68EC000D9351 /* DebugTBCell.swift */,
 			);
-			name = UI;
+			name = "应用界面";
+			sourceTree = "<group>";
+		};
+		537313A71D3B7223000D9351 /* 第三方类库 */ = {
+			isa = PBXGroup;
+			children = (
+				537313A81D3B723A000D9351 /* MSWeakTimer */,
+			);
+			name = "第三方类库";
+			sourceTree = "<group>";
+		};
+		537313A81D3B723A000D9351 /* MSWeakTimer */ = {
+			isa = PBXGroup;
+			children = (
+				537313A41D3B721B000D9351 /* MSWeakTimer.h */,
+				537313A51D3B721B000D9351 /* MSWeakTimer.m */,
+			);
+			name = MSWeakTimer;
+			sourceTree = "<group>";
+		};
+		537313AB1D3B7639000D9351 /* 位置引擎 */ = {
+			isa = PBXGroup;
+			children = (
+				537313AC1D3B768B000D9351 /* LocationManager.swift */,
+			);
+			name = "位置引擎";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -105,11 +139,20 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = KagurazakaYashi;
 				TargetAttributes = {
 					537313861D3B5F4A000D9351 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = ZNVDEVDRX3;
+						DevelopmentTeamName = "XIAOCHI CHEN";
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -151,8 +194,10 @@
 			files = (
 				5373138D1D3B5F4A000D9351 /* ViewController.swift in Sources */,
 				537313A01D3B68EC000D9351 /* DebugTBCell.swift in Sources */,
+				537313AD1D3B768B000D9351 /* LocationManager.swift in Sources */,
 				5373139D1D3B6736000D9351 /* DebugTBC.swift in Sources */,
 				5373138B1D3B5F4A000D9351 /* AppDelegate.swift in Sources */,
+				537313A61D3B721B000D9351 /* MSWeakTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,10 +310,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = iFindMyParents/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.FindMyParents.iFindMyParents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iFindMyParents/iFindMyParents-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -276,10 +326,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = iFindMyParents/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.FindMyParents.iFindMyParents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iFindMyParents/iFindMyParents-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
