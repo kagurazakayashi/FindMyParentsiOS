@@ -27,15 +27,19 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     //var 计时器:MSWeakTimer
     let 位置引擎:LocationManager = LocationManager()
     
-    func 新增日志条目(内容:String) {
+    func 新增日志条目(信息内容:String) {
         let 当前日期:Date = Date()
         let 日期格式化器:DateFormatter = DateFormatter()
         日期格式化器.dateFormat = "yyyy-MM-dd 'at' HH:mm:ss.SSS"
         let 当前日期字符串:String = 日期格式化器.string(from: 当前日期)
-       print("\(当前日期字符串) \(内容)")
-        日志数据.add(内容)
+        //print("\(当前日期字符串) \(信息内容)")
+        日志数据.add(信息内容)
         日志时间.add(当前日期字符串)
         tableView.reloadData()
+        // *indexPath = [NSIndexPath indexPathForItem:13 inSection:0];
+        let 滚动到位置:IndexPath = IndexPath(item: 日志数据.count-1, section: 0)
+        tableView.selectRow(at: 滚动到位置, animated: false, scrollPosition: UITableViewScrollPosition.bottom)
+        tableView.deselectRow(at: 滚动到位置, animated: true)
     }
     
     func 定时扫描() {
@@ -44,24 +48,24 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     
     override func viewDidLoad() {
         创建UI()
-        新增日志条目(内容: "Application loading complete.")
+        新增日志条目(信息内容: "Application loading complete.")
         启动任务()
     }
     
     func 启动任务() {
         //计时器 = MSWeakTimer.scheduledTimerWithTimeInterval(10.0, target: self, selector: #selector(self.定时扫描), userInfo: nil, repeats: false, dispatchQueue: dispatch_get_main_queue())
         位置引擎.代理 = self
-        位置引擎.精度 = 1
+        位置引擎.精度 = 100
         位置引擎.初始化位置引擎()
     }
     
     func 位置引擎提示(信息:String) {
-        新增日志条目(内容: 信息)
+        新增日志条目(信息内容: 信息)
     }
     
     func 位置引擎信息(经度:Double, 纬度:Double) {
         let 信息:String = "longitude=\(经度), latitude=\(纬度)"
-        新增日志条目(内容: 信息)
+        新增日志条目(信息内容: 信息)
     }
     
     func 创建UI() {
@@ -72,7 +76,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
@@ -80,9 +84,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         return 日志数据.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let 单元格:UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier:"cell");
-        单元格.selectionStyle = .none
+//        单元格.selectionStyle = .none
         单元格.backgroundColor = UIColor.black()
         单元格.textLabel!.font = 字体设置
         单元格.detailTextLabel!.font = 字体设置
@@ -93,7 +97,11 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         return 单元格
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 25
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
