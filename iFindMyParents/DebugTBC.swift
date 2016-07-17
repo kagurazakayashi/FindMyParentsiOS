@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreTelephony
 
 class DebugTBC: UITableViewController, LocationManagerDelegate {
     
@@ -47,8 +48,10 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     }
     
     override func viewDidLoad() {
+        NotificationCenter.default().addObserver(self, selector: #selector(位置引擎提示(通知:)), name: "appdele", object: nil)
         创建UI()
         新增日志条目(信息内容: "Application loading complete.")
+        获取设备信息()
         启动任务()
     }
     
@@ -57,6 +60,10 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         位置引擎.代理 = self
         位置引擎.精度 = 100
         位置引擎.初始化位置引擎()
+    }
+    
+    func 位置引擎提示(通知:Notification) {
+        新增日志条目(信息内容: 通知.object! as! String)
     }
     
     func 位置引擎提示(信息:String) {
@@ -74,6 +81,35 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         self.tableView.tableHeaderView = 表格头部视图
         self.tableView.backgroundColor = UIColor.black()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+    }
+    
+    func 获取设备信息() {
+        let 设备:UIDevice = UIDevice()
+        //新增日志条目(信息内容: "name : \(设备.name)")
+        新增日志条目(信息内容: "Model : \(设备.model)")
+        //新增日志条目(信息内容: "localizedModel : \(设备.localizedModel)")
+        新增日志条目(信息内容: "System name : \(设备.systemName)")
+        新增日志条目(信息内容: "System version : \(设备.systemVersion)")
+        新增日志条目(信息内容: "UUID : \(设备.identifierForVendor!.uuidString)")
+        let 缩放:CGFloat = UIScreen.main().scale
+        新增日志条目(信息内容: "Screen scale : \(缩放)")
+        let 屏幕:CGRect = UIScreen.main().bounds
+        新增日志条目(信息内容: "Screen size : \(屏幕.width) x \(屏幕.height)")
+        新增日志条目(信息内容: "Screen resolution : \(屏幕.width*缩放) x \(屏幕.height*缩放)")
+        let 移动网络:CTTelephonyNetworkInfo = CTTelephonyNetworkInfo()
+        let 运营商:CTCarrier? = 移动网络.subscriberCellularProvider
+        新增日志条目(信息内容: "Carrier name : \(运营商?.carrierName!)")
+        新增日志条目(信息内容: "Connect type : \(移动网络.currentRadioAccessTechnology)")
+        if (设备.batteryState == UIDeviceBatteryState.unplugged){
+            新增日志条目(信息内容: "Battery state : unplugged")
+        } else if (设备.batteryState == UIDeviceBatteryState.charging){
+            新增日志条目(信息内容: "Battery state : charging")
+        } else if (设备.batteryState == UIDeviceBatteryState.full){
+            新增日志条目(信息内容: "Battery state : full")
+        } else {
+            新增日志条目(信息内容: "Battery state : unknown")
+        }
+        新增日志条目(信息内容: "Battery level : \(设备.batteryLevel*100.0*(-1)) %")
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
