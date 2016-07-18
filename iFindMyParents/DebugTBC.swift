@@ -15,8 +15,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     // ===== 公共设置 =====
     let FMP位置提交接口:String = "http://s.aday01.com:18080/uploader"
     let 服务器提交延迟:TimeInterval = 300.0 //两次访问接口相隔的时间，建议5分钟
-    var 精度:Double = 100 //偏差范围（米），建议100米
-    var 用户名:String = "yashi"
+    let 精度:Double = 100 //偏差范围（米），建议100米
+    let 用户名:String = "yashi"
+    let 日志记录条目限制:Int = 100
     // = = = = = = = = = =
     
     
@@ -44,6 +45,10 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         日期格式化器.dateFormat = "yyyy-MM-dd 'at' HH:mm:ss.SSS"
         let 当前日期字符串:String = 日期格式化器.string(from: 当前日期)
         //print("\(当前日期字符串) \(信息内容)")
+        if (日志数据.count >= 日志记录条目限制) {
+            日志数据.removeObject(at: 0)
+            日志时间.removeObject(at: 0)
+        }
         日志数据.add(信息内容)
         日志时间.add(当前日期字符串)
         将日志显示在UI()
