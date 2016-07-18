@@ -36,6 +36,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     var 网络繁忙:Bool = false
     var UUIDstr:String = ""
     var 上次请求时间:Date? = nil
+    var 更新日志到GUI:Bool = true
     
     func 新增日志条目(信息内容:String) {
         let 当前日期:Date = Date()
@@ -45,15 +46,23 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         //print("\(当前日期字符串) \(信息内容)")
         日志数据.add(信息内容)
         日志时间.add(当前日期字符串)
-        tableView.reloadData()
-        // *indexPath = [NSIndexPath indexPathForItem:13 inSection:0];
-        let 滚动到位置:IndexPath = IndexPath(item: 日志数据.count-1, section: 0)
-        tableView.selectRow(at: 滚动到位置, animated: false, scrollPosition: UITableViewScrollPosition.bottom)
-        tableView.deselectRow(at: 滚动到位置, animated: true)
+        将日志显示在UI()
+    }
+    
+    func 将日志显示在UI() {
+        if (更新日志到GUI == true) {
+            tableView.reloadData()
+            // *indexPath = [NSIndexPath indexPathForItem:13 inSection:0];
+            let 滚动到位置:IndexPath = IndexPath(item: 日志数据.count-1, section: 0)
+            tableView.selectRow(at: 滚动到位置, animated: false, scrollPosition: UITableViewScrollPosition.bottom)
+            tableView.deselectRow(at: 滚动到位置, animated: true)
+        }
     }
     
     override func viewDidLoad() {
         NotificationCenter.default().addObserver(self, selector: #selector(位置引擎提示(通知:)), name: "appdele", object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(暂停更新日志UI), name: "loguion", object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(继续更新日志UI), name: "loguioff", object: nil)
         创建UI()
         新增日志条目(信息内容: "Application loading complete.")
         获取设备信息()
@@ -64,6 +73,14 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         位置引擎.代理 = self
         位置引擎.精度 = 精度
         位置引擎.初始化位置引擎()
+    }
+    
+    func 暂停更新日志UI() {
+        更新日志到GUI = false
+    }
+    func 继续更新日志UI() {
+        更新日志到GUI = true
+        将日志显示在UI()
     }
     
     func 位置引擎提示(通知:Notification) {
@@ -87,6 +104,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         }
     }
     
+    //纬度范围-90~90，经度范围-180~180
     func 位置引擎信息(经度:Double, 纬度:Double) {
         let 信息:String = "longitude=\(经度), latitude=\(纬度)"
         新增日志条目(信息内容: 信息)
@@ -96,7 +114,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
                 let 日期格式化器:DateFormatter = DateFormatter()
                 日期格式化器.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let 当前日期字符串:String = 日期格式化器.string(from: 当前日期)
-                let data = ["lat":"\(经度)","lon":"\(纬度)","radius":"\(精度)"]
+                let data = ["lat":"\(纬度)","lon":"\(经度)","radius":"\(精度)"]
                 let 要提交的参数 = ["action":"gps","imei":UUIDstr,"date":当前日期字符串,"data":data]
                 if (JSONSerialization.isValidJSONObject(要提交的参数) == false) {
                     新增日志条目(信息内容: "[ERR] Failed to create JSON.")
@@ -117,6 +135,8 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     func 执行网络请求(要提交的数据:AnyObject) {
         网络繁忙 = true
         let 网络会话管理器:AFHTTPSessionManager = AFHTTPSessionManager()
+        网络会话管理器.responseSerializer = AFJSONResponseSerializer()
+        网络会话管理器.requestSerializer = AFJSONRequestSerializer()
         let 提交到:String = "\(FMP位置提交接口)?user=\(用户名)"
         新增日志条目(信息内容: "Sending request \(提交到)")
         网络会话管理器.post(提交到, parameters: 要提交的数据, progress: { (当前过程:Progress) in
@@ -154,6 +174,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         let uuidn = 设备.identifierForVendor!.uuidString
         UUIDstr = uuidn.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literalSearch, range: nil)
         新增日志条目(信息内容: "UUID : \(UUIDstr)")
+        print("UUID : \(UUIDstr)")
         let 缩放:CGFloat = UIScreen.main().scale
         新增日志条目(信息内容: "Screen scale : \(缩放)")
         let 屏幕:CGRect = UIScreen.main().bounds
