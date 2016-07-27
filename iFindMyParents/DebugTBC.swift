@@ -65,9 +65,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     }
     
     override func viewDidLoad() {
-        NotificationCenter.default().addObserver(self, selector: #selector(位置引擎提示(通知:)), name: "appdele", object: nil)
-        NotificationCenter.default().addObserver(self, selector: #selector(暂停更新日志UI), name: "loguion", object: nil)
-        NotificationCenter.default().addObserver(self, selector: #selector(继续更新日志UI), name: "loguioff", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(位置引擎提示(通知:)), name: "appdele" as NSNotification.Name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(暂停更新日志UI), name: "loguion" as NSNotification.Name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(继续更新日志UI), name: "loguioff" as NSNotification.Name, object: nil)
         创建UI()
         新增日志条目(信息内容: "Application loading complete.")
         获取设备信息()
@@ -177,7 +177,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         新增日志条目(信息内容: "System name : \(设备.systemName)")
         新增日志条目(信息内容: "System version : \(设备.systemVersion)")
         let uuidn = 设备.identifierForVendor!.uuidString
-        UUIDstr = uuidn.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literalSearch, range: nil)
+        UUIDstr = uuidn.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
         新增日志条目(信息内容: "UUID : \(UUIDstr)")
         print("UUID : \(UUIDstr)")
         let 缩放:CGFloat = UIScreen.main().scale
