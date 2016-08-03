@@ -154,7 +154,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
                 self.新增日志条目(信息内容: 返回信息!)
                 self.网络繁忙 = false
                 self.上次请求时间 = Date()
-        }) { (当前网络任务:URLSessionDataTask?, 错误:NSError) in
+        }) { (当前网络任务:URLSessionDataTask?, 错误:Error) in
             self.新增日志条目(信息内容: "[ERR] \(错误.localizedDescription)")
             self.网络繁忙 = false
             self.上次请求时间 = Date()
@@ -163,9 +163,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
  
     func 创建UI() {
         let 表格头部视图:UIView = UIView(frame: CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: self.view.frame.size.width, height: 20)))
-        表格头部视图.backgroundColor = UIColor.lightGray()
+        表格头部视图.backgroundColor = UIColor.lightGray
         self.tableView.tableHeaderView = 表格头部视图
-        self.tableView.backgroundColor = UIColor.black()
+        self.tableView.backgroundColor = UIColor.black
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
     }
     
@@ -180,9 +180,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         UUIDstr = uuidn.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
         新增日志条目(信息内容: "UUID : \(UUIDstr)")
         print("UUID : \(UUIDstr)")
-        let 缩放:CGFloat = UIScreen.main().scale
+        let 缩放:CGFloat = UIScreen.main.scale
         新增日志条目(信息内容: "Screen scale : \(缩放)")
-        let 屏幕:CGRect = UIScreen.main().bounds
+        let 屏幕:CGRect = UIScreen.main.bounds
         新增日志条目(信息内容: "Screen size : \(屏幕.width) x \(屏幕.height)")
         新增日志条目(信息内容: "Screen resolution : \(屏幕.width*缩放) x \(屏幕.height*缩放)")
         let 移动网络:CTTelephonyNetworkInfo = CTTelephonyNetworkInfo()
@@ -212,11 +212,11 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let 单元格:UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier:"cell");
 //        单元格.selectionStyle = .none
-        单元格.backgroundColor = UIColor.black()
+        单元格.backgroundColor = UIColor.black
         单元格.textLabel!.font = 字体设置
         单元格.detailTextLabel!.font = 字体设置
-        单元格.textLabel!.textColor = UIColor.lightGray()
-        单元格.detailTextLabel!.textColor = UIColor.lightGray()
+        单元格.textLabel!.textColor = UIColor.lightGray
+        单元格.detailTextLabel!.textColor = UIColor.lightGray
         单元格.textLabel!.text = 日志时间[indexPath.row] as? String
         单元格.detailTextLabel!.text = 日志数据[indexPath.row] as? String
         return 单元格
