@@ -65,9 +65,9 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
     }
     
     override func viewDidLoad() {
-        NotificationCenter.default.addObserver(self, selector: #selector(位置引擎提示(通知:)), name: "appdele" as NSNotification.Name, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(暂停更新日志UI), name: "loguion" as NSNotification.Name, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(继续更新日志UI), name: "loguioff" as NSNotification.Name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(位置引擎提示(通知:)), name: Notification.Name("appdele"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(暂停更新日志UI), name: Notification.Name("loguion"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(继续更新日志UI), name: Notification.Name("loguioff"), object: nil)
         创建UI()
         新增日志条目(信息内容: "Application loading complete.")
         获取设备信息()
@@ -120,14 +120,14 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
                 日期格式化器.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let 当前日期字符串:String = 日期格式化器.string(from: 当前日期)
                 let data = ["lat":"\(纬度)","lon":"\(经度)","radius":"\(精度)"]
-                let 要提交的参数 = ["action":"gps","imei":UUIDstr,"date":当前日期字符串,"data":data]
+                let 要提交的参数 = ["action":"gps","imei":UUIDstr,"date":当前日期字符串,"data":data] as [String : Any]
                 if (JSONSerialization.isValidJSONObject(要提交的参数) == false) {
                     新增日志条目(信息内容: "[ERR] Failed to create JSON.")
                 } else {
                     //let 要提交的数据:Data! = try? JSONSerialization.data(withJSONObject: 要提交的参数, options: [])
                     //let 要提交的JSON:String = String(data: 要提交的数据, encoding: String.Encoding.utf8)!
                     //print(要提交的JSON)
-                    执行网络请求(要提交的数据: 要提交的参数)
+                    执行网络请求(要提交的数据: 要提交的参数 as AnyObject)
                 }
             } else {
                 新增日志条目(信息内容: "Wait for timer.")
@@ -146,7 +146,7 @@ class DebugTBC: UITableViewController, LocationManagerDelegate {
         新增日志条目(信息内容: "Sending request \(提交到)")
         网络会话管理器.post(提交到, parameters: 要提交的数据, progress: { (当前过程:Progress) in
             
-            }, success: { (当前网络任务:URLSessionDataTask, 数据:AnyObject?) in
+            }, success: { (当前网络任务:URLSessionDataTask, 数据:Any?) in
                 var 返回信息:String? = 数据 as? String
                 if (返回信息 == nil) {
                     返回信息 = "Receive blank data."
